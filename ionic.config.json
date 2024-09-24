@@ -1,0 +1,7 @@
+{
+  "name": "ci-cd-test-app",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "custom"
+}
