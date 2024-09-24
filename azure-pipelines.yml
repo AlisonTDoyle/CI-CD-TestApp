@@ -1,0 +1,37 @@
+# Node.js with Angular
+# Build a Node.js project that uses Angular.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+
+trigger:
+- master
+
+jobs:
+  - job: BuildJs
+    displayName: "Build app in JavaScript"
+    
+    steps:
+    # Installing Node.js
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '20.x'
+      displayName: "Install Node.js"
+
+    # Install packages using node
+    - script: npm i
+      displayName: "Install packages"
+
+    # Compile application to javascript and save as .zip so packages don't have to be reinstalled in later jobs
+    - task: ArchiveFiles@2
+      inputs:
+        rootFolderOrFile: '$(Build.SourcesDirectory)/ci-cd-test-app/browser'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/dest.zip'
+      displayName: "Archive Source"
+
+    # Publishing .zip so other jobs can access it
+    - task: PublishPipelineArtifact@1
+      inputs:
+       targetPath : '$(Build.ArtifactStagingDirectory)/'
+       publishLocation: pipeline
+       artifact: 'dist'
+      displayName: "Archive Source"
